@@ -1,8 +1,19 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:login/src/assets/configuration.dart';
 
-class Profile extends StatelessWidget {
-  const Profile({Key key}) : super(key: key);
+class Profile extends StatefulWidget {
+  Profile({Key key}) : super(key: key);
+
+  @override
+  _ProfileState createState() => _ProfileState();
+}
+
+class _ProfileState extends State<Profile> {
+  final picker = ImagePicker();
+  String imagePath;
 
   @override
   Widget build(BuildContext context) {
@@ -17,15 +28,16 @@ class Profile extends StatelessWidget {
               padding: EdgeInsets.all(30),
               child: ListView(children: <Widget>[
                 InkWell(
-                  child: Image.network(
-                    "https://villasmilindovillas.com/wp-content/uploads/2020/01/Profile.png",
-                    width: 200,
-                    height: 200,
-                  ),
-                  onTap: () {
-                    debugPrint("Clic en imagen");
+                  child: getImage(),
+                  onTap: () async {
+                    final pickedFile =
+                        await picker.getImage(source: ImageSource.gallery);
+                    setState(() {
+                      imagePath = pickedFile.path;
+                    });
                   },
                 ),
+                SizedBox(height: 30),
                 Text("Nombre"),
                 SizedBox(height: 10),
                 TextFormField(
@@ -74,5 +86,15 @@ class Profile extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Widget getImage() {
+    return imagePath == null
+        ? Image.network(
+            "https://villasmilindovillas.com/wp-content/uploads/2020/01/Profile.png",
+            width: 200,
+            height: 200,
+          )
+        : Image.file(File(imagePath));
   }
 }
