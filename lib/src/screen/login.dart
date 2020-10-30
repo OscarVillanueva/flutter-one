@@ -74,7 +74,8 @@ class _LoginState extends State<Login> {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         color: Colors.lightBlue,
         onPressed: () async {
-          User user = User(txtControllerEmail.text, txtControllerPassword.text);
+          User user = User.fromLogin(
+              txtControllerEmail.text, txtControllerPassword.text);
 
           setState(() {
             isLoading = true;
