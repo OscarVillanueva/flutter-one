@@ -22,4 +22,16 @@ class User {
   Map<String, dynamic> toJSON() {
     return {"username": username, "password": password};
   }
+
+  Map<String, dynamic> toFullJSON() {
+    return {
+      "username": username,
+      "password": password,
+      "name": name,
+      "lastName": lastName,
+      "phone": phone,
+      "email": email,
+      "photo": photo
+    };
+  }
 }

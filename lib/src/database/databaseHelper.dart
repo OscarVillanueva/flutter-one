@@ -29,7 +29,7 @@ class DatabaseHelper {
 
   _createTables(Database db, int version) async {
     await db.execute(
-        "CREATE TABLE tbl_profile(idUser INTEGER PRIMARY, name varchar(25), lastName varchar(25), phone varchar(10), email varchar(30), photo varchar(250), username varchar(30), password varchar(20))");
+        "CREATE TABLE tbl_profile(idUser INTEGER PRIMARY KEY, name varchar(25), lastName varchar(25), phone varchar(10), email varchar(30), photo varchar(250), username varchar(30), password varchar(20))");
   }
 
   Future<int> insert(Map<String, dynamic> row, String table) async {
@@ -64,6 +64,8 @@ class DatabaseHelper {
         .query("tbl_profile", where: "email = ?", whereArgs: [email]);
 
     var list = (result).map((e) => User.fromJSON(e)).toList();
-    return list[0];
+    return list.length > 0
+        ? list[0]
+        : null;
   }
 }

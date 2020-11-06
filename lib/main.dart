@@ -33,10 +33,12 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       routes: {
+        "/login": (BuildContext context) => Login(),
         "/trending": (BuildContext context) => Trending(),
         "/search": (BuildContext context) => Search(),
         "/favorites": (BuildContext context) => Favorites(),
         "/profile": (BuildContext context) => Profile(),
+        "/dashboard": (BuildContext context) => Dashboard()
       },
       home: first,
     );
