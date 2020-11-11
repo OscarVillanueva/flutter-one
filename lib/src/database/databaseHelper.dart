@@ -64,8 +64,6 @@ class DatabaseHelper {
         .query("tbl_profile", where: "email = ?", whereArgs: [email]);
 
     var list = (result).map((e) => User.fromJSON(e)).toList();
-    return list.length > 0
-        ? list[0]
-        : null;
+    return list.length > 0 ? list[0] : null;
   }
 }

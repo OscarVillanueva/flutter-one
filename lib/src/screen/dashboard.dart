@@ -1,9 +1,9 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:login/src/assets/configuration.dart';
 import 'package:login/src/database/databaseHelper.dart';
 import 'package:login/src/models/User.dart';
+import 'package:login/src/network/api_movies.dart';
 import 'package:login/src/screen/login.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -14,6 +14,9 @@ class Dashboard extends StatelessWidget {
   Widget build(BuildContext context) {
     DatabaseHelper _database = DatabaseHelper();
     Future<User> _savedUser = _database.getUser("correo@correo.com");
+
+    ApiMovies apiMovies = ApiMovies();
+    apiMovies.getTrending();
 
     return Container(
       child: Scaffold(
