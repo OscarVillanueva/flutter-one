@@ -16,6 +16,7 @@ class ApiMovies {
       var data = jsonDecode(response.body)["results"] as List;
       List<Result> movies =
           data.map((movie) => Result.fromJSON(movie)).toList();
+      return movies;
     } else
       return null;
   }
