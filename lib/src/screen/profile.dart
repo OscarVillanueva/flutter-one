@@ -17,6 +17,7 @@ class Profile extends StatefulWidget {
 class _ProfileState extends State<Profile> {
   String imagePath;
   DatabaseHelper _database;
+  User user;
   final picker = ImagePicker();
   TextEditingController txtControllerName = TextEditingController();
   TextEditingController txtControllerLastName = TextEditingController();
@@ -27,6 +28,7 @@ class _ProfileState extends State<Profile> {
   void initState() {
     super.initState();
     _database = DatabaseHelper();
+    lookForUser();
   }
 
   @override
@@ -55,6 +57,7 @@ class _ProfileState extends State<Profile> {
                 Text("Nombre"),
                 SizedBox(height: 10),
                 TextFormField(
+                  // initialValue: "Javier",
                   controller: txtControllerName,
                   keyboardType: TextInputType.name,
                   decoration: InputDecoration(
@@ -67,6 +70,7 @@ class _ProfileState extends State<Profile> {
                 Text("Apellido"),
                 SizedBox(height: 10),
                 TextFormField(
+                  // initialValue: user != null ? user.lastName : "",
                   controller: txtControllerLastName,
                   keyboardType: TextInputType.name,
                   decoration: InputDecoration(
@@ -79,6 +83,7 @@ class _ProfileState extends State<Profile> {
                 Text("Email"),
                 SizedBox(height: 10),
                 TextFormField(
+                  // initialValue: user != null ? user.email : "",
                   controller: txtControllerEmail,
                   keyboardType: TextInputType.emailAddress,
                   decoration: InputDecoration(
@@ -91,6 +96,7 @@ class _ProfileState extends State<Profile> {
                 Text("Teléfono"),
                 SizedBox(height: 10),
                 TextFormField(
+                  // initialValue: user != null ? user.email : "",
                   controller: txtControllerPhone,
                   keyboardType: TextInputType.number,
                   decoration: InputDecoration(
@@ -144,5 +150,25 @@ class _ProfileState extends State<Profile> {
             height: 200,
           )
         : Image.file(File(imagePath));
+  }
+
+  void lookForUser() async {
+    User bridge = await _database.getUser("correo@correo.com");
+    if (bridge != null) {
+      setValues(bridge);
+      setState(() {
+        user = bridge;
+        imagePath = bridge.photo;
+      });
+    }
+  }
+
+  void setValues(user) async {
+    if (user != null) {
+      txtControllerName.text = user.name;
+      txtControllerLastName.text = user.lastName;
+      txtControllerPhone.text = user.phone;
+      txtControllerEmail.text = user.email;
+    }
   }
 }

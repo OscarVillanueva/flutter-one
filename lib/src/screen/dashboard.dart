@@ -32,16 +32,7 @@ class Dashboard extends StatelessWidget {
                   children: <Widget>[
                     UserAccountsDrawerHeader(
                       decoration: BoxDecoration(color: Configuration.colorApp),
-                      currentAccountPicture: snapshot.data == null
-                          ? CircleAvatar(
-                              backgroundImage: NetworkImage(
-                                  "https://villasmilindovillas.com/wp-content/uploads/2020/01/Profile.png"),
-                            )
-                          : ClipOval(
-                              child: Image.file(
-                              File(snapshot.data.photo),
-                              fit: BoxFit.cover,
-                            )),
+                      currentAccountPicture: defineAvatar(snapshot.data),
                       accountName: Text("Javier Villanueva"),
                       accountEmail: Text("correo@correo.com"),
                       onDetailsPressed: () {
@@ -98,5 +89,20 @@ class Dashboard extends StatelessWidget {
     Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
     final SharedPreferences prefs = await _prefs;
     await prefs.setString("token", null);
+  }
+
+  Widget defineAvatar(data) {
+    if (data == null || data.photo == null)
+      return CircleAvatar(
+        backgroundImage: NetworkImage(
+            "https://villasmilindovillas.com/wp-content/uploads/2020/01/Profile.png"),
+      );
+    else {
+      return ClipOval(
+          child: Image.file(
+        File(data.photo),
+        fit: BoxFit.cover,
+      ));
+    }
   }
 }
