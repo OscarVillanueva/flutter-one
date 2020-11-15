@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -6,6 +7,7 @@ import 'package:login/src/assets/configuration.dart';
 import 'package:login/src/database/databaseHelper.dart';
 import 'package:login/src/models/User.dart';
 import 'package:login/src/screen/dashboard.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Profile extends StatefulWidget {
   Profile({Key key}) : super(key: key);
@@ -19,6 +21,7 @@ class _ProfileState extends State<Profile> {
   DatabaseHelper _database;
   User user;
   final picker = ImagePicker();
+  Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   TextEditingController txtControllerName = TextEditingController();
   TextEditingController txtControllerLastName = TextEditingController();
   TextEditingController txtControllerPhone = TextEditingController();
@@ -28,7 +31,8 @@ class _ProfileState extends State<Profile> {
   void initState() {
     super.initState();
     _database = DatabaseHelper();
-    lookForUser();
+    // lookForUser();
+    _lookForUser2();
   }
 
   @override
@@ -57,7 +61,6 @@ class _ProfileState extends State<Profile> {
                 Text("Nombre"),
                 SizedBox(height: 10),
                 TextFormField(
-                  // initialValue: "Javier",
                   controller: txtControllerName,
                   keyboardType: TextInputType.name,
                   decoration: InputDecoration(
@@ -70,7 +73,6 @@ class _ProfileState extends State<Profile> {
                 Text("Apellido"),
                 SizedBox(height: 10),
                 TextFormField(
-                  // initialValue: user != null ? user.lastName : "",
                   controller: txtControllerLastName,
                   keyboardType: TextInputType.name,
                   decoration: InputDecoration(
@@ -83,8 +85,8 @@ class _ProfileState extends State<Profile> {
                 Text("Email"),
                 SizedBox(height: 10),
                 TextFormField(
-                  // initialValue: user != null ? user.email : "",
                   controller: txtControllerEmail,
+                  enabled: false,
                   keyboardType: TextInputType.emailAddress,
                   decoration: InputDecoration(
                       hintText: "Ingresa tu email",
@@ -96,7 +98,6 @@ class _ProfileState extends State<Profile> {
                 Text("Teléfono"),
                 SizedBox(height: 10),
                 TextFormField(
-                  // initialValue: user != null ? user.email : "",
                   controller: txtControllerPhone,
                   keyboardType: TextInputType.number,
                   decoration: InputDecoration(
@@ -114,7 +115,7 @@ class _ProfileState extends State<Profile> {
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8)),
                     color: Configuration.colorApp,
-                    onPressed: () {
+                    onPressed: () async {
                       // Guardar en la base de datos
                       User user = User(
                           "username",
@@ -125,6 +126,9 @@ class _ProfileState extends State<Profile> {
                           txtControllerEmail.text,
                           imagePath,
                           1);
+
+                      // Guadamos en sharedpreferences
+                      await saveUser(user);
 
                       // Insertamos en la base de datos
                       _database.insert(user.toFullJSON(), "tbl_profile");
@@ -170,5 +174,27 @@ class _ProfileState extends State<Profile> {
       txtControllerPhone.text = user.phone;
       txtControllerEmail.text = user.email;
     }
+  }
+
+  void _lookForUser2() async {
+    final SharedPreferences prefs = await _prefs;
+
+    Map userMap = jsonDecode(prefs.getString('user'));
+    User bridge = User.fromJSON(userMap);
+
+    setValues(bridge);
+
+    setState(() {
+      user = bridge;
+      imagePath = bridge.photo == "" ? null : bridge.photo;
+    });
+  }
+
+  void saveUser(User user) async {
+    final SharedPreferences prefs = await _prefs;
+
+    String userStringified = jsonEncode(user.toFullJSON());
+
+    await prefs.setString("user", userStringified);
   }
 }

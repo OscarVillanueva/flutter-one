@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:login/src/assets/configuration.dart';
@@ -14,6 +15,7 @@ class Dashboard extends StatelessWidget {
   Widget build(BuildContext context) {
     DatabaseHelper _database = DatabaseHelper();
     Future<User> _savedUser = _database.getUser("correo@correo.com");
+    Future<User> _savedUser2 = _lookForUser2();
 
     ApiMovies apiMovies = ApiMovies();
     apiMovies.getTrending();
@@ -26,15 +28,19 @@ class Dashboard extends StatelessWidget {
         ),
         drawer: Drawer(
           child: FutureBuilder(
-              future: _savedUser,
+              future: _savedUser2,
               builder: (BuildContext context, AsyncSnapshot<User> snapshot) {
                 return ListView(
                   children: <Widget>[
                     UserAccountsDrawerHeader(
                       decoration: BoxDecoration(color: Configuration.colorApp),
                       currentAccountPicture: defineAvatar(snapshot.data),
-                      accountName: Text("Javier Villanueva"),
-                      accountEmail: Text("correo@correo.com"),
+                      accountName: Text(snapshot.data != null
+                          ? "${snapshot.data.name} ${snapshot.data.lastName}"
+                          : "Invitado"),
+                      accountEmail: Text(snapshot.data != null
+                          ? snapshot.data.email
+                          : "Invitado"),
                       onDetailsPressed: () {
                         Navigator.pop(context);
                         Navigator.pushNamed(context, "/profile");
@@ -104,5 +110,12 @@ class Dashboard extends StatelessWidget {
         fit: BoxFit.cover,
       ));
     }
+  }
+
+  Future<User> _lookForUser2() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    Map userMap = jsonDecode(prefs.getString('user'));
+    return User.fromJSON(userMap);
   }
 }

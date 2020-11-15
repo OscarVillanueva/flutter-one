@@ -12,7 +12,7 @@ class User {
   User(this.username, this.password, this.name, this.lastName, this.phone,
       this.email, this.photo, this.id);
 
-  User.fromLogin(this.username, this.password);
+  User.fromLogin(this.email, this.password);
 
   factory User.fromJSON(Map<String, dynamic> map) {
     return User(map["username"], map["password"], map["name"], map["lastName"],
@@ -20,7 +20,7 @@ class User {
   }
 
   Map<String, dynamic> toJSON() {
-    return {"username": username, "password": password};
+    return {"email": email, "password": password};
   }
 
   Map<String, dynamic> toFullJSON() {

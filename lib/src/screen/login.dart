@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:login/src/models/User.dart';
 import 'package:login/src/network/api_login.dart';
@@ -16,9 +18,13 @@ class _LoginState extends State<Login> {
   bool isRemember = true;
   Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
 
-  Future<bool> _rememberme(String token) async {
+  Future<bool> _rememberme(String token, User user) async {
     final SharedPreferences prefs = await _prefs;
     bool result = true;
+
+    String userStringified = jsonEncode(user.toFullJSON());
+
+    await prefs.setString("user", userStringified);
 
     if (isRemember) result = await prefs.setString("token", token);
 
@@ -87,7 +93,7 @@ class _LoginState extends State<Login> {
             isLoading = false;
           });
 
-          final result = await _rememberme(token);
+          final result = await _rememberme(token, user);
 
           if (result)
             Navigator.push(
