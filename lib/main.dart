@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:login/src/screen/dashboard.dart';
+import 'package:login/src/screen/detailMovie.dart';
 import 'package:login/src/screen/favorites.dart';
 import 'package:login/src/screen/login.dart';
 import 'package:login/src/screen/profile.dart';
 import 'package:login/src/screen/search.dart';
+import 'package:login/src/screen/splashscreen.dart';
 import 'package:login/src/screen/trending.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:splashscreen/splashscreen.dart';
 
 void main() {
   runApp(MyApp());
@@ -38,7 +41,8 @@ class _MyAppState extends State<MyApp> {
         "/search": (BuildContext context) => Search(),
         "/favorites": (BuildContext context) => Favorites(),
         "/profile": (BuildContext context) => Profile(),
-        "/dashboard": (BuildContext context) => Dashboard()
+        "/dashboard": (BuildContext context) => Dashboard(),
+        "/detail": (BuildContext context) => Detail()
       },
       home: first,
     );
@@ -50,7 +54,7 @@ class _MyAppState extends State<MyApp> {
     final token = prefs.getString("token");
 
     setState(() {
-      first = token != null ? Dashboard() : Login();
+      first = token != null ? Dashboard() : Splash();
     });
   }
 }
