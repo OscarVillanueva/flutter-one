@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:login/src/models/Trending.dart';
+import 'package:login/src/screen/detailMovie.dart';
 
 class CardTrending extends StatefulWidget {
   final Result movie;
@@ -51,10 +52,10 @@ class _CardTrendingState extends State<CardTrending> {
                   FlatButton(
                       child: Icon(Icons.chevron_right, color: Colors.white),
                       onPressed: () {
-                        Navigator.pushNamed(context, "/detail", arguments: {
-                          "title": movie.title,
-                          "overview": movie.overview,
-                        });
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => Detail(movie: movie)));
                       })
                 ],
               ),
