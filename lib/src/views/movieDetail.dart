@@ -1,14 +1,19 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:login/src/assets/configuration.dart';
+import 'package:login/src/models/Cast.dart';
+import 'package:login/src/models/MovieExtra.dart';
 import 'package:login/src/models/Trending.dart';
 import 'package:login/src/models/Video.dart';
+import 'package:login/src/network/api_cast.dart';
 import 'package:login/src/network/api_videos.dart';
+import 'package:login/src/screen/detailMovie.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class MovieDetail extends StatelessWidget {
   final Result movie;
   ApiVideo apiVideo;
+  ApiCast apiCast;
   MovieDetail({this.movie});
 
   @override
@@ -16,10 +21,11 @@ class MovieDetail extends StatelessWidget {
     return Container(
       color: Colors.black.withOpacity(0.6),
       child: FutureBuilder(
-        future: getTrailer(),
-        builder: (BuildContext context, AsyncSnapshot<Video> snapshot) {
+        future: prepareDetails(),
+        builder: (BuildContext context, AsyncSnapshot<MovieExtra> snapshot) {
           return ListView(children: <Widget>[
-            preparePlayer(key: snapshot.data != null ? snapshot.data.key : ""),
+            preparePlayer(
+                key: snapshot.data != null ? snapshot.data.video.key : ""),
             Container(
               padding: EdgeInsets.all(20),
               child: Column(
@@ -63,6 +69,21 @@ class MovieDetail extends StatelessWidget {
     Video video = await apiVideo.trailer();
 
     return video;
+  }
+
+  Future<List<CastElement>> getCast() async {
+    apiCast = ApiCast(movie: movie.id);
+
+    List<CastElement> cast = await apiCast.cast();
+
+    return cast;
+  }
+
+  Future<MovieExtra> prepareDetails() async {
+    Video video = await getTrailer();
+    List<CastElement> cast = await getCast();
+
+    return MovieExtra(video: video, cast: cast);
   }
 
   Widget preparePlayer({String key}) {
