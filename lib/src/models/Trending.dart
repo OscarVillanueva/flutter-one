@@ -15,39 +15,34 @@ class Trending {
 }
 
 class Result {
-  double popularity;
-  int voteCount;
-  bool video;
   String posterPath;
   int id;
   String backdropPath;
   String title;
+  bool adult;
   double voteAverage;
   String overview;
   String releaseDate;
+  bool favorite = false;
 
   Result({
-    this.popularity,
-    this.voteCount,
-    this.video,
     this.posterPath,
     this.id,
     this.backdropPath,
     this.title,
     this.voteAverage,
     this.overview,
+    this.adult,
     this.releaseDate,
   });
 
   factory Result.fromJSON(Map<String, dynamic> movie) {
     return Result(
-        popularity: movie["popularity"],
-        voteCount: movie["vote_count"],
-        video: movie["video"],
         posterPath: movie["poster_path"],
         id: movie["id"],
         backdropPath: movie["backdrop_path"],
         title: movie["title"],
+        adult: movie["adult"],
         voteAverage: movie["vote_average"] is int
             ? (movie["vote_average"] as int).toDouble()
             : movie["vote_average"],

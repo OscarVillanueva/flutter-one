@@ -6,20 +6,31 @@ import 'package:login/src/assets/configuration.dart';
 import 'package:login/src/models/Trending.dart';
 import 'package:login/src/views/movieDetail.dart';
 
-class Detail extends StatelessWidget {
+class Detail extends StatefulWidget {
   final Result movie;
-  Detail({this.movie});
+  Detail({Result movie}) : this.movie = movie;
+
+  @override
+  _DetailState createState() => _DetailState(movie: movie);
+}
+
+class _DetailState extends State<Detail> {
+  _DetailState({this.movie});
+  final Result movie;
+  IconData icon = Icons.favorite_outline;
 
   @override
   Widget build(BuildContext context) {
-    // final movie =
-    //     ModalRoute.of(context).settings.arguments as Map<String, dynamic>;
-
     return Container(
       child: Scaffold(
         appBar: AppBar(
           title: Text(movie.title),
           backgroundColor: Configuration.colorApp,
+          actions: <Widget>[
+            MaterialButton(
+                child: Icon(icon, color: Colors.red[300]),
+                onPressed: () => changeMoviePreference())
+          ],
         ),
         body: Container(
           constraints: BoxConstraints.expand(),
@@ -37,5 +48,13 @@ class Detail extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  changeMoviePreference() {
+    movie.favorite = !movie.favorite;
+
+    setState(() {
+      icon = movie.favorite ? Icons.favorite : Icons.favorite_outline;
+    });
   }
 }

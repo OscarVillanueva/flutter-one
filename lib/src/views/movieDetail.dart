@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:login/src/assets/configuration.dart';
 import 'package:login/src/models/Cast.dart';
 import 'package:login/src/models/MovieExtra.dart';
@@ -7,8 +8,9 @@ import 'package:login/src/models/Trending.dart';
 import 'package:login/src/models/Video.dart';
 import 'package:login/src/network/api_cast.dart';
 import 'package:login/src/network/api_videos.dart';
-import 'package:login/src/screen/detailMovie.dart';
+import 'package:login/src/views/character.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
+import 'package:smooth_star_rating/smooth_star_rating.dart';
 
 class MovieDetail extends StatelessWidget {
   final Result movie;
@@ -43,6 +45,50 @@ class MovieDetail extends StatelessWidget {
                       size: 18,
                       align: TextAlign.justify,
                       weight: FontWeight.normal),
+                  SizedBox(height: 30),
+                  generateTextField(
+                      text: "Rating",
+                      color: Colors.white,
+                      size: 20,
+                      align: TextAlign.justify,
+                      weight: FontWeight.normal),
+                  SizedBox(height: 30),
+                  SmoothStarRating(
+                      allowHalfRating: false,
+                      onRated: (v) {},
+                      starCount: 5,
+                      rating: generateRating(movie.voteAverage),
+                      size: 40.0,
+                      isReadOnly: true,
+                      color: Configuration.colorApp,
+                      borderColor: Configuration.colorApp,
+                      spacing: 0.0),
+                  SizedBox(height: 30),
+                  generateTextField(
+                      text: "Fecha de lanzamiento: ${movie.releaseDate}",
+                      color: Colors.white,
+                      size: 20,
+                      align: TextAlign.start,
+                      weight: FontWeight.normal),
+                  SizedBox(height: 30),
+                  generateTextField(
+                      text: "Cast",
+                      color: Colors.white,
+                      size: 20,
+                      align: TextAlign.center,
+                      weight: FontWeight.normal),
+                  SizedBox(height: 30),
+                  drawList(snapshot.data),
+                  SizedBox(height: 30),
+                  generateTextField(
+                      text: movie.adult
+                          ? "No apta para niños"
+                          : "Apta para todo público",
+                      color: Colors.white,
+                      size: 20,
+                      align: TextAlign.start,
+                      weight: FontWeight.bold),
+                  SizedBox(height: 30),
                 ],
               ),
             )
@@ -104,6 +150,30 @@ class MovieDetail extends StatelessWidget {
       initialVideoId: key,
       flags: YoutubePlayerFlags(
           autoPlay: false, mute: false, enableCaption: false),
+    );
+  }
+
+  double generateRating(double rating) {
+    return rating * 5 / 10;
+  }
+
+  Widget drawList(MovieExtra snap) {
+    if (snap != null) {
+      return _listCast(snap.cast);
+    } else
+      return CircularProgressIndicator();
+  }
+
+  Widget _listCast(List<CastElement> data) {
+    return Container(
+      height: 260.0,
+      child: ListView.builder(
+          scrollDirection: Axis.horizontal,
+          itemBuilder: (context, index) {
+            CastElement character = data[index];
+            return Character(character: character);
+          },
+          itemCount: data.length),
     );
   }
 }
