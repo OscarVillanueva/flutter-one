@@ -51,7 +51,10 @@ class _TrendingState extends State<Trending> {
     return ListView.builder(
         itemBuilder: (context, index) {
           Result movie = data[index];
-          return CardTrending(movie: movie);
+          return CardTrending(
+            movie: movie,
+            lookInDatabase: true,
+          );
         },
         itemCount: data.length);
   }

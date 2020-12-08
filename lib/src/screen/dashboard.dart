@@ -14,7 +14,7 @@ class Dashboard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     DatabaseHelper _database = DatabaseHelper();
-    Future<User> _savedUser = _database.getUser("correo@correo.com");
+    // Future<User> _savedUser = _database.getUser("correo@correo.com");
     Future<User> _savedUser2 = _lookForUser2();
 
     ApiMovies apiMovies = ApiMovies();

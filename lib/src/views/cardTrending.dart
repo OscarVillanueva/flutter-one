@@ -4,15 +4,19 @@ import 'package:login/src/screen/detailMovie.dart';
 
 class CardTrending extends StatefulWidget {
   final Result movie;
-  CardTrending({Result movie}) : this.movie = movie;
+  final bool lookInDatabase;
+  CardTrending({Result movie, bool lookInDatabase})
+      : this.movie = movie,
+        this.lookInDatabase = lookInDatabase;
 
   @override
-  _CardTrendingState createState() => _CardTrendingState(movie);
+  _CardTrendingState createState() => _CardTrendingState(movie, lookInDatabase);
 }
 
 class _CardTrendingState extends State<CardTrending> {
-  _CardTrendingState(this.movie);
+  _CardTrendingState(this.movie, this.lookInDatabase);
   final Result movie;
+  final bool lookInDatabase;
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +59,9 @@ class _CardTrendingState extends State<CardTrending> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => Detail(movie: movie)));
+                                builder: (context) => Detail(
+                                    movie: movie,
+                                    lookInDatabase: lookInDatabase)));
                       })
                 ],
               ),

@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:login/src/models/Trending.dart';
 import 'package:login/src/models/User.dart';
 import "package:path/path.dart";
 import 'package:path_provider/path_provider.dart';
@@ -28,8 +29,10 @@ class DatabaseHelper {
   }
 
   _createTables(Database db, int version) async {
+    // await db.execute(
+    //     "CREATE TABLE tbl_profile(idUser INTEGER PRIMARY KEY, name varchar(25), lastName varchar(25), phone varchar(10), email varchar(30), photo varchar(250), username varchar(30), password varchar(20))");
     await db.execute(
-        "CREATE TABLE tbl_profile(idUser INTEGER PRIMARY KEY, name varchar(25), lastName varchar(25), phone varchar(10), email varchar(30), photo varchar(250), username varchar(30), password varchar(20))");
+        "CREATE TABLE tbl_favorites(id INTEGER PRIMARY KEY, posterPath varchar(90), backdropPath varchar(90), title varchar(255), adult integer, voteAverage double, overview text, releaseDate varchar(70), favorite integer)");
   }
 
   Future<int> insert(Map<String, dynamic> row, String table) async {
@@ -65,5 +68,24 @@ class DatabaseHelper {
 
     var list = (result).map((e) => User.fromJSON(e)).toList();
     return list.length > 0 ? list[0] : null;
+  }
+
+  Future<Result> getMovie(int id) async {
+    var dbClient = await database;
+
+    var result =
+        await dbClient.query("tbl_favorites", where: "id = ?", whereArgs: [id]);
+
+    var list = (result).map((e) => Result.fromJSONWithFavorite(e)).toList();
+    return list.length > 0 ? list[0] : null;
+  }
+
+  Future<List<Result>> getMovies() async {
+    var dbClient = await database;
+
+    var result = await dbClient.query("tbl_favorites");
+
+    var list = (result).map((e) => Result.fromJSONWithFavorite(e)).toList();
+    return list.length > 0 ? list : null;
   }
 }

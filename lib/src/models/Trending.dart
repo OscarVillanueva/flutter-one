@@ -49,4 +49,34 @@ class Result {
         overview: movie["overview"],
         releaseDate: movie["release_date"]);
   }
+
+  factory Result.fromJSONWithFavorite(Map<String, dynamic> movie) {
+    Result result = Result(
+        posterPath: movie["poster_path"],
+        id: movie["id"],
+        backdropPath: movie["backdrop_path"],
+        title: movie["title"],
+        adult: movie["adult"] == 1 ? true : false,
+        voteAverage: movie["vote_average"] is int
+            ? (movie["vote_average"] as int).toDouble()
+            : movie["vote_average"],
+        overview: movie["overview"],
+        releaseDate: movie["release_date"]);
+    result.favorite = movie["favorite"] == 1 ? true : false;
+    return result;
+  }
+
+  Map<String, dynamic> toFullJSON() {
+    return {
+      "posterPath": posterPath,
+      "id": id,
+      "backdropPath": backdropPath,
+      "title": title,
+      "voteAverage": voteAverage,
+      "releaseDate": releaseDate,
+      "adult": adult ? 1 : 0,
+      "overview": overview,
+      "favorite": favorite ? 1 : 0
+    };
+  }
 }
