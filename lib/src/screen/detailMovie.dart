@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:login/src/assets/configuration.dart';
 import 'package:login/src/database/databaseHelper.dart';
 import 'package:login/src/models/Trending.dart';
+import 'package:login/src/screen/favorites.dart';
 import 'package:login/src/views/movieDetail.dart';
 
 class Detail extends StatefulWidget {
@@ -32,7 +33,10 @@ class _DetailState extends State<Detail> {
 
     _database = DatabaseHelper();
 
-    if (lookInDatabase) isFavorite();
+    if (lookInDatabase)
+      isFavorite();
+    else
+      icon = Icons.favorite;
   }
 
   @override

@@ -32,7 +32,7 @@ class DatabaseHelper {
     // await db.execute(
     //     "CREATE TABLE tbl_profile(idUser INTEGER PRIMARY KEY, name varchar(25), lastName varchar(25), phone varchar(10), email varchar(30), photo varchar(250), username varchar(30), password varchar(20))");
     await db.execute(
-        "CREATE TABLE tbl_favorites(id INTEGER PRIMARY KEY, posterPath varchar(90), backdropPath varchar(90), title varchar(255), adult integer, voteAverage double, overview text, releaseDate varchar(70), favorite integer)");
+        "CREATE TABLE tbl_favorites(id INTEGER PRIMARY KEY, posterPath text, backdropPath text, title text, adult integer, voteAverage numeric, overview text, releaseDate text, favorite integer)");
   }
 
   Future<int> insert(Map<String, dynamic> row, String table) async {

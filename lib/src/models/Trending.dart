@@ -52,16 +52,16 @@ class Result {
 
   factory Result.fromJSONWithFavorite(Map<String, dynamic> movie) {
     Result result = Result(
-        posterPath: movie["poster_path"],
+        posterPath: movie["posterPath"],
         id: movie["id"],
-        backdropPath: movie["backdrop_path"],
+        backdropPath: movie["backdropPath"],
         title: movie["title"],
         adult: movie["adult"] == 1 ? true : false,
-        voteAverage: movie["vote_average"] is int
-            ? (movie["vote_average"] as int).toDouble()
-            : movie["vote_average"],
+        voteAverage: movie["voteAverage"] is int
+            ? (movie["voteAverage"] as int).toDouble()
+            : movie["voteAverage"],
         overview: movie["overview"],
-        releaseDate: movie["release_date"]);
+        releaseDate: movie["releaseDate"]);
     result.favorite = movie["favorite"] == 1 ? true : false;
     return result;
   }
